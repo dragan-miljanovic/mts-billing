@@ -2,7 +2,6 @@
 
 namespace App\Services\Import\Traits;
 
-use App\Repositories\ImportLogRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\UuidInterface;
@@ -14,7 +13,7 @@ trait ImportLogTrait
         $totalChunks = (int) ceil($mappedData->count() / $chunkSize);
         $uid = Str::uuid();
 
-        app(ImportLogRepository::class)->create([
+        $this->importLogRepository->create([
             'uid' => $uid,
             'total_chunks' => $totalChunks,
         ]);

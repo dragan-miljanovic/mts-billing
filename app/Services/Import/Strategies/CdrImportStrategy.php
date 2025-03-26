@@ -2,6 +2,7 @@
 
 namespace App\Services\Import\Strategies;
 
+use App\Repositories\ImportLogRepository;
 use App\Services\Import\Contracts\ImportStrategyInterface;
 use App\Services\Import\Traits\ImportLogTrait;
 use App\Utils\Contracts\LoggerInterface;
@@ -10,8 +11,10 @@ class CdrImportStrategy implements ImportStrategyInterface
 {
     use ImportLogTrait;
 
-    public function __construct(private LoggerInterface $logger)
-    {
+    public function __construct(
+        private LoggerInterface $logger,
+        private ImportLogRepository $importLogRepository
+    ) {
     }
 
     /**
