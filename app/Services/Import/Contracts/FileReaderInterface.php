@@ -11,5 +11,5 @@ interface FileReaderInterface
      * @return string
      * @throws \RuntimeException
      */
-    public function read(string $file): string;
+    public function read(string $file): array;
 }

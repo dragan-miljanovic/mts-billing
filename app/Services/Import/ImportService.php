@@ -26,44 +26,13 @@ class ImportService
     {
         $cdrType = ImportTypeEnum::Cdr->value;
         $confType = ImportTypeEnum::Conf->value;
+
         // Read the file content
         $data = $this->fileReader->read($file);
-        // Process the data
-        $processedData = $this->parseData($data);
 
         // Import the processed data
-        $this->importFactory->createImportStrategy($cdrType)->process($processedData[$cdrType]);
-        $this->importFactory->createImportStrategy($confType)->process($processedData[$confType]);
-    }
-
-    /**
-     * Parse the raw data into structured records
-     *
-     * @param string $data
-     * @return array
-     */
-    private function parseData(string $data): array
-    {
-        $records = explode("\n", $data);
-        $cdrType = ImportTypeEnum::Cdr->value;
-        $confType = ImportTypeEnum::Conf->value;
-        $parsedData = [
-            $cdrType => [],
-            $confType => []
-        ];
-        $currentCategory = null;
-
-        foreach ($records as $line) {
-            if (str_contains($line, '#CRCE CDR')) {
-                $currentCategory = $cdrType;
-            } elseif (str_contains($line, '#CRCE CONF')) {
-                $currentCategory = $confType;
-            } elseif ($currentCategory && !empty(trim($line))) {
-                $parsedData[$currentCategory][] = array_slice(explode('|', $line), 23);
-            }
-        }
-
-        return $parsedData;
+        $this->importFactory->createImportStrategy($cdrType)->process($data[$cdrType]);
+        $this->importFactory->createImportStrategy($confType)->process($data[$confType]);
     }
 }
 
