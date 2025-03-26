@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\ImportLogRepository;
 use App\Services\Import\Contracts\FileReaderInterface;
 use App\Services\Import\Contracts\ImportFactoryInterface;
 use App\Services\Import\ImportFactory;
@@ -23,7 +24,8 @@ class ImportServiceProvider extends ServiceProvider
 
         $this->app->bind(ImportFactoryInterface::class, function ($app) {
             return new ImportFactory(
-                $app->make(LoggerInterface::class)
+                $app->make(LoggerInterface::class),
+                $app->make(ImportLogRepository::class)
             );
         });
     }

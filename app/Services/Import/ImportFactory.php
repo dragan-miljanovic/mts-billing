@@ -2,6 +2,7 @@
 
 namespace App\Services\Import;
 
+use App\Repositories\ImportLogRepository;
 use App\Services\Import\Contracts\ImportFactoryInterface;
 use App\Services\Import\Strategies\CdrImportStrategy;
 use App\Services\Import\Strategies\ConfImportStrategy;
@@ -13,6 +14,7 @@ class ImportFactory implements ImportFactoryInterface
 
     public function __construct(
         private LoggerInterface $logger,
+        private ImportLogRepository $importLogRepository
     ) {}
     /**
      * Create the appropriate import strategy based on type
@@ -24,8 +26,8 @@ class ImportFactory implements ImportFactoryInterface
     public function createImportStrategy(string $type): CdrImportStrategy|ConfImportStrategy
     {
         return match (strtoupper($type)) {
-            'CDR' => new CdrImportStrategy($this->logger),
-            'CONF' => new ConfImportStrategy($this->logger),
+            'CDR' => new CdrImportStrategy($this->logger, $this->importLogRepository),
+            'CONF' => new ConfImportStrategy($this->logger, $this->importLogRepository),
             default => throw new InvalidArgumentException("Invalid import type: $type")
         };
     }
