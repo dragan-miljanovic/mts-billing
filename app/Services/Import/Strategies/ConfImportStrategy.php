@@ -3,10 +3,13 @@
 namespace App\Services\Import\Strategies;
 
 use App\Services\Import\Contracts\ImportStrategyInterface;
+use App\Services\Import\Traits\ImportLogTrait;
 use App\Utils\Contracts\LoggerInterface;
 
 class ConfImportStrategy implements ImportStrategyInterface
 {
+    use ImportLogTrait;
+
     public function __construct(private LoggerInterface $logger)
     {
     }
@@ -18,13 +21,17 @@ class ConfImportStrategy implements ImportStrategyInterface
      */
     public function process(array $data): void
     {
-        $confData = $data['CONF'] ?? [];
+        $chunkSize = 1;
+        $confData = collect($data['CONF'] ?? []);
 
-        // Implement CONF-specific import logic
-        foreach ($confData as $record) {
-            // Process each CONF record
-            // Add logging, validation, database insertion, etc.
-            $this->logger?->info('Importing CONF record', ['record' => $record]);
+        if (!$confData->isEmpty()) {
+            $uid = $this->createImportLog($confData, $chunkSize);
+
+            $confData->chunk($chunkSize)->each(function ($record) {
+
+
+                $this->logger->info('Importing CDR record', ['record' => $record]);
+            });
         }
     }
 }

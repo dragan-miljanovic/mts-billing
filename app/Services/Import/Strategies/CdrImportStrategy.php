@@ -3,10 +3,13 @@
 namespace App\Services\Import\Strategies;
 
 use App\Services\Import\Contracts\ImportStrategyInterface;
+use App\Services\Import\Traits\ImportLogTrait;
 use App\Utils\Contracts\LoggerInterface;
 
 class CdrImportStrategy implements ImportStrategyInterface
 {
+    use ImportLogTrait;
+
     public function __construct(private LoggerInterface $logger)
     {
     }
@@ -18,13 +21,17 @@ class CdrImportStrategy implements ImportStrategyInterface
      */
     public function process(array $data): void
     {
-        $cdrData = $data['CDR'] ?? [];
+        $chunkSize = 1;
+        $cdrData = collect($data['CDR'] ?? []);
 
-        // Implement CDR-specific import logic
-        foreach ($cdrData as $record) {
-            // Process each CDR record
-            // Add logging, validation, database insertion, etc.
-            $this->logger->info('Importing CDR record', ['record' => $record]);
+        if (!$cdrData->isEmpty()) {
+            $uid = $this->createImportLog($cdrData, $chunkSize);
+
+            $cdrData->chunk($chunkSize)->each(function ($record) {
+
+
+                $this->logger->info('Importing CDR record', ['record' => $record]);
+            });
         }
     }
 }
