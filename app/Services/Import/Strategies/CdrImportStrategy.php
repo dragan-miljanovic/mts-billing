@@ -2,6 +2,7 @@
 
 namespace App\Services\Import\Strategies;
 
+use App\Jobs\CallChargeImport;
 use App\Repositories\ImportLogRepository;
 use App\Services\Import\Contracts\ImportStrategyInterface;
 use App\Services\Import\Traits\ImportLogTrait;
@@ -24,16 +25,16 @@ class CdrImportStrategy implements ImportStrategyInterface
      */
     public function process(array $data): void
     {
-        $chunkSize = 1;
-        $cdrData = collect($data['CDR'] ?? []);
+        $chunkSize = env('JOB_CHUNK_SIZE');
+        $cdrData = collect($data);
 
         if (!$cdrData->isEmpty()) {
-            $uid = $this->createImportLog($cdrData, $chunkSize);
+            $uid = $this->createImportLog($cdrData->count(), $chunkSize);
 
-            $cdrData->chunk($chunkSize)->each(function ($record) {
+            $cdrData->chunk($chunkSize)->each(function ($chunk) use ($uid) {
+                CallChargeImport::dispatch($uid, $chunk);
 
-
-                $this->logger->info('Importing CDR record', ['record' => $record]);
+                $this->logger->info('Importing CDR record', ['record' => $chunk]);
             });
         }
     }
