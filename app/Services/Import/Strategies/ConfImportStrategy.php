@@ -26,13 +26,13 @@ class ConfImportStrategy implements ImportStrategyInterface
     public function process(array $data): void
     {
         $chunkSize = 1;
-        $confData = collect($data['CONF'] ?? []);
+        $confData = collect($data);
 
         if (!$confData->isEmpty()) {
             $uid = $this->createImportLog($confData, $chunkSize);
 
-            $confData->chunk($chunkSize)->each(function ($record) {
-                ConfImport::dispatch($record);
+            $confData->chunk($chunkSize)->each(function ($record) use ($uid) {
+                ConfImport::dispatch($uid, $record);
 
                 $this->logger->info('Importing CDR record', ['record' => $record]);
             });
