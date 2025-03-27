@@ -50,6 +50,11 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $model->update($attributes);
     }
 
+    public function updateOrCreate(array $attributes): Model
+    {
+        return $this->model->query()->updateOrCreate($attributes);
+    }
+
     public function delete(Model $model): bool
     {
         return $model->delete();

@@ -20,6 +20,7 @@ interface BaseRepositoryInterface
     public function create(array $attributes): Model;
 
     public function update(Model $model, array $attributes): bool;
+    public function updateOrCreate(array $attributes): Model;
 
     public function delete(Model $model): bool;
 }

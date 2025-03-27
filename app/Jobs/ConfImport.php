@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\ImportLog;
 use App\Repositories\ConfirmationRepository;
 use App\Repositories\ImportLogRepository;
+use App\Services\Import\ConfirmationMapperService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -84,16 +85,23 @@ class ConfImport implements ShouldQueue
 
     private function processData(array $productData): void
     {
-        //TODO Check if record exists, if exists do update and increment $this->>updated
-        app(ConfirmationRepository::class)->insert($productData);
+        $mappedData = app(ConfirmationMapperService::class)->mapToModel($productData);
+        $confInfo = app(ConfirmationRepository::class)->updateOrCreate($mappedData);
+
+        if ($confInfo->wasChanged(['updated_at'])) {
+            $this->updated++;
+
+            return;
+        }
 
         $this->inserted++;
     }
 
-    private function endImport()
+    private function endImport(): void
     {
         app(ImportLogRepository::class)->update($this->importLog, [
-            'total_chunks' => $this->importLog->total_chunks + 1,
+            'inserted' => $this->importLog->inserted + $this->inserted,
+            'updated' => $this->importLog->updated + $this->updated,
         ]);
 
         $this->importLog = $this->importLog->fresh();
