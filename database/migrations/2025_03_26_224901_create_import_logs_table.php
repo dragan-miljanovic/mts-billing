@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('uid')->unique();
             $table->integer('total_chunks')->default(0);
+            $table->integer('imported')->default(0);
+            $table->integer('updated')->default(0);
             $table->timestamps();
         });
     }
