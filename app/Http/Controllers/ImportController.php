@@ -7,7 +7,6 @@ use App\Services\Import\ImportService;
 use App\Exceptions\ImportException;
 use App\Utils\Contracts\LoggerInterface;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 
 class ImportController extends Controller
 {
@@ -18,23 +17,18 @@ class ImportController extends Controller
         ImportRequest $request
     ): RedirectResponse
     {
-        DB::beginTransaction();
-
         try {
             $file = $request->file('file');
 
             $importService->import($file);
         } catch (ImportException $e) {
-            DB::rollBack();
 
             $logger ->error('Error while getting authors: ', ['message' => $e]);
 
-            request()->session()->flash('message', 'Unexpected error, please try again later.');
+            request()->session()->flash('message', 'Unexpected error, please try again later. Import Has not started.');
         }
 
-        DB::commit();
-
-        request()->session()->flash('message', 'Import successfully ended.');
+        request()->session()->flash('message', 'Import successfully started.');
 
         return redirect()->back();
     }
