@@ -14,7 +14,7 @@ class ImportLog extends Model
     protected $fillable = [
         'uid',
         'total_chunks',
-        'imported',
+        'inserted',
         'updated',
     ];
 }
