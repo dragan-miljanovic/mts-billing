@@ -34,7 +34,7 @@ class ConfImportStrategy implements ImportStrategyInterface
             $confData->chunk($chunkSize)->each(function ($collection) use ($uid) {
                 ConfImport::dispatch($uid, $collection);
 
-                $this->logger->info('Importing CDR record', ['record' => $collection->first()]);
+                $this->logger->info('Importing CONF record', ['record' => $collection->first()]);
             });
         }
     }
