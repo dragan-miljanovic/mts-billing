@@ -3,9 +3,10 @@
 namespace App\Jobs;
 
 use App\Models\ImportLog;
-use App\Repositories\CallChargeRepository;
+use App\Repositories\Contracts\CallChargeRepositoryInterface;
+use App\Repositories\Contracts\ImportLogRepositoryInterface;
 use App\Repositories\ImportLogRepository;
-use App\Services\Import\CallChargeMapperService;
+use App\Services\Import\Contracts\CallChargeMapperInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -65,28 +66,36 @@ class CallChargeImport implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle(
+        ImportLogRepositoryInterface $importLogRepository,
+        CallChargeRepositoryInterface $callChargeRepository,
+        CallChargeMapperInterface $callChargeMapper
+    ): void
     {
-        $this->startImport();
+        $this->startImport($importLogRepository);
 
         foreach ($this->chunk as $productData) {
-            $this->processData($productData);
+            $this->processData($productData, $callChargeRepository, $callChargeMapper);
         }
 
-        $this->endImport();
+        $this->endImport($importLogRepository);
     }
 
-    private function startImport(): void
+    private function startImport(ImportLogRepositoryInterface $importLogRepository): void
     {
-        app(ImportLogRepository::class)->update($this->importLog, [
+        $importLogRepository->update($this->importLog, [
             'total_chunks' => $this->importLog->total_chunks - 1,
         ]);
     }
 
-    private function processData(array $productData): void
+    private function processData(
+        array $productData,
+        CallChargeRepositoryInterface $callChargeRepository,
+        CallChargeMapperInterface $callChargeMapper
+    ): void
     {
-        $mappedData = app(CallChargeMapperService::class)->mapToModel($productData);
-        $confInfo = app(CallChargeRepository::class)->updateOrCreate($mappedData);
+        $mappedData = $callChargeMapper->mapToModel($productData);
+        $confInfo = $callChargeRepository->updateOrCreate($mappedData);
 
         if ($confInfo->wasChanged(['updated_at'])) {
             $this->updated++;
@@ -97,9 +106,9 @@ class CallChargeImport implements ShouldQueue
         $this->inserted++;
     }
 
-    private function endImport(): void
+    private function endImport(ImportLogRepositoryInterface $importLogRepository): void
     {
-        app(ImportLogRepository::class)->update($this->importLog, [
+        $importLogRepository->update($this->importLog, [
             'inserted' => $this->importLog->inserted + $this->inserted,
             'updated' => $this->importLog->updated + $this->updated,
         ]);

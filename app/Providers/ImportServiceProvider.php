@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use App\Repositories\Contracts\ImportLogRepositoryInterface;
 use App\Repositories\ImportLogRepository;
-use App\Services\Import\ConfirmationMapperService;
-use App\Services\Import\Contracts\ConfirmationMapperInterface;
 use App\Services\Import\Contracts\FileReaderInterface;
 use App\Services\Import\Contracts\ImportFactoryInterface;
 use App\Services\Import\ImportFactory;
@@ -25,7 +23,6 @@ class ImportServiceProvider extends ServiceProvider
         $this->app->bind(LoggerInterface::class, LogHelper::class);
         $this->app->bind(FileReaderInterface::class, TextFileReader::class);
         $this->app->bind(ImportLogRepositoryInterface::class, ImportLogRepository::class);
-        $this->app->bind(ConfirmationMapperInterface::class, ConfirmationMapperService::class);
 
         $this->app->bind(ImportFactoryInterface::class, function ($app) {
             return new ImportFactory(
