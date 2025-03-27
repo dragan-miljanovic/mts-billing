@@ -17,12 +17,17 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     public function find($id): ?Model
     {
-        return $this->model->find($id);
+        return $this->model->query()->find($id);
     }
 
     public function findBy(array $criteria): Collection
     {
-        return $this->model->where($criteria)->get();
+        return $this->model->query()->where($criteria)->get();
+    }
+
+    public function findOneBy(array $criteria): ?Model
+    {
+        return $this->model->query()->where($criteria)->first();
     }
 
     public function findAll(): Collection
@@ -30,9 +35,14 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->model->all();
     }
 
+    public function insert(array $attributes): bool
+    {
+        return $this->model->query()->insert($attributes);
+    }
+
     public function create(array $attributes): Model
     {
-        return $this->model->create($attributes);
+        return $this->model->query()->create($attributes);
     }
 
     public function update(Model $model, array $attributes): bool

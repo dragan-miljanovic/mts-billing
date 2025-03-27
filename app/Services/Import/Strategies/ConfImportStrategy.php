@@ -2,7 +2,8 @@
 
 namespace App\Services\Import\Strategies;
 
-use App\Repositories\ImportLogRepository;
+use App\Jobs\ConfImport;
+use App\Repositories\Contracts\ImportLogRepositoryInterface;
 use App\Services\Import\Contracts\ImportStrategyInterface;
 use App\Services\Import\Traits\ImportLogTrait;
 use App\Utils\Contracts\LoggerInterface;
@@ -13,7 +14,7 @@ class ConfImportStrategy implements ImportStrategyInterface
 
     public function __construct(
         private LoggerInterface $logger,
-        private ImportLogRepository $importLogRepository
+        private ImportLogRepositoryInterface $importLogRepository
     ) {
     }
 
@@ -31,7 +32,7 @@ class ConfImportStrategy implements ImportStrategyInterface
             $uid = $this->createImportLog($confData, $chunkSize);
 
             $confData->chunk($chunkSize)->each(function ($record) {
-
+                ConfImport::dispatch($record);
 
                 $this->logger->info('Importing CDR record', ['record' => $record]);
             });

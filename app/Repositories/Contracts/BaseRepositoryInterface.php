@@ -11,7 +11,11 @@ interface BaseRepositoryInterface
 
     public function findBy(array $criteria): Collection;
 
+    public function findOneBy(array $criteria): ?Model;
+
     public function findAll(): Collection;
+
+    public function insert(array $attributes): bool;
 
     public function create(array $attributes): Model;
 
