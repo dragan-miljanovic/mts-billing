@@ -104,14 +104,15 @@ class ConfirmationMapperService implements ConfirmationMapperInterface
         $transformedData = [];
 
         foreach ($mappingConfig as $attribute => $index) {
-            // Trim empty strings, convert to null
-            if ($attribute === 'subscriber_activation_date') {
-                $value = Carbon::parse($rawData[$index])->toDateTimeString();
-            } else {
-                $value = $rawData[$index];
-            }
+            $value = $rawData[$index];
 
-            $transformedData[$attribute] = $value === '' ? null : $value;
+            // Special transformations
+            $value = match ($attribute) {
+                'subscriber_activation_date' => !empty($value) ? Carbon::parse($value)->toDateTimeString() : null,
+                default => $value === '' ? null : $value,
+            };
+
+            $transformedData[$attribute] = $value;
         }
 
         return $transformedData;

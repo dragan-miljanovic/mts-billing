@@ -120,18 +120,11 @@ class CallChargeMapperService implements CallChargeMapperInterface
             $value = $rawData[$index];
 
             // Special transformations
-            switch ($attribute) {
-                case 'answer_time':
-                    $value = !empty($value) ? Carbon::parse($value)->toDateTimeString() : null;
-                    break;
-                case 'roaming':
-                case 'clip_suppress_number':
-                case 'charge_free_action':
-                    $value = strtolower($value) === 'true';
-                    break;
-                default:
-                    $value = $value === '' ? null : $value;
-            }
+            $value = match ($attribute) {
+                'answer_time' => !empty($value) ? Carbon::parse($value)->toDateTimeString() : null,
+                'roaming', 'clip_suppress_number', 'charge_free_action' => strtolower($value) === 'true',
+                default => $value === '' ? null : $value,
+            };
 
             $transformedData[$attribute] = $value;
         }
