@@ -5,9 +5,9 @@ namespace App\Jobs;
 use App\Exceptions\ImportException;
 use App\Models\ImportLog;
 use App\Notifications\ImportNotification;
-use App\Repositories\CallChargeRepository;
-use App\Repositories\ImportLogRepository;
-use App\Services\Import\CallChargeMapperService;
+use App\Repositories\Contracts\CallChargeRepositoryInterface;
+use App\Repositories\Contracts\ImportLogRepositoryInterface;
+use App\Services\Import\Contracts\CallChargeMapperInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -62,7 +62,7 @@ class CallChargeImport implements ShouldQueue
         private readonly Collection $chunk,
     )
     {
-        $this->importLog = app(ImportLogRepository::class)->findOneBy(['uid' => $uid]);
+        $this->importLog = app(ImportLogRepositoryInterface::class)->findOneBy(['uid' => $uid]);
     }
 
     /**
@@ -90,15 +90,15 @@ class CallChargeImport implements ShouldQueue
             throw new ImportException('Import log not found');
         }
 
-        app(ImportLogRepository::class)->update($this->importLog, [
+        app(ImportLogRepositoryInterface::class)->update($this->importLog, [
             'total_chunks' => $this->importLog->total_chunks - 1,
         ]);
     }
 
     private function processData(array $productData): void
     {
-        $mappedData = app(CallChargeMapperService::class)->mapToModel($productData);
-        $confInfo = app(CallChargeRepository::class)->updateOrCreate($mappedData);
+        $mappedData = app(CallChargeMapperInterface::class)->mapToModel($productData);
+        $confInfo = app(CallChargeRepositoryInterface::class)->updateOrCreate($mappedData);
 
         if ($confInfo->wasChanged(['updated_at'])) {
             $this->updated++;
@@ -111,7 +111,7 @@ class CallChargeImport implements ShouldQueue
 
     private function endImport(): void
     {
-        app(ImportLogRepository::class)->update($this->importLog, [
+        app(ImportLogRepositoryInterface::class)->update($this->importLog, [
             'inserted' => $this->importLog->inserted + $this->inserted,
             'updated' => $this->importLog->updated + $this->updated,
         ]);
@@ -130,7 +130,7 @@ class CallChargeImport implements ShouldQueue
     public function failed(?Throwable $exception): void
     {
         if ($this->importLog) {
-            app(ImportLogRepository::class)->update($this->importLog, [
+            app(ImportLogRepositoryInterface::class)->update($this->importLog, [
                 'total_chunks' => $this->importLog->total_chunks + 1,
             ]);
         }

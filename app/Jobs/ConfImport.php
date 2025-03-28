@@ -5,9 +5,10 @@ namespace App\Jobs;
 use App\Exceptions\ImportException;
 use App\Models\ImportLog;
 use App\Notifications\ImportNotification;
-use App\Repositories\ConfirmationRepository;
+use App\Repositories\Contracts\ConfirmationRepositoryInterface;
+use App\Repositories\Contracts\ImportLogRepositoryInterface;
 use App\Repositories\ImportLogRepository;
-use App\Services\Import\ConfirmationMapperService;
+use App\Services\Import\Contracts\ConfirmationMapperInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
@@ -62,7 +63,7 @@ class ConfImport implements ShouldQueue
         private readonly Collection $chunk,
     )
     {
-        $this->importLog = app(ImportLogRepository::class)->findOneBy(['uid' => $uid]);
+        $this->importLog = app(ImportLogRepositoryInterface::class)->findOneBy(['uid' => $uid]);
     }
 
     /**
@@ -90,15 +91,15 @@ class ConfImport implements ShouldQueue
             throw new ImportException('Import log not found');
         }
 
-        app(ImportLogRepository::class)->update($this->importLog, [
+        app(ImportLogRepositoryInterface::class)->update($this->importLog, [
             'total_chunks' => $this->importLog->total_chunks - 1,
         ]);
     }
 
     private function processData(array $productData): void
     {
-        $mappedData = app(ConfirmationMapperService::class)->mapToModel($productData);
-        $confInfo = app(ConfirmationRepository::class)->updateOrCreate($mappedData);
+        $mappedData = app(ConfirmationMapperInterface::class)->mapToModel($productData);
+        $confInfo = app(ConfirmationRepositoryInterface::class)->updateOrCreate($mappedData);
 
         if ($confInfo->wasChanged(['updated_at'])) {
             $this->updated++;
@@ -130,7 +131,7 @@ class ConfImport implements ShouldQueue
     public function failed(?Throwable $exception): void
     {
         if ($this->importLog) {
-            app(ImportLogRepository::class)->update($this->importLog, [
+            app(ImportLogRepositoryInterface::class)->update($this->importLog, [
                 'total_chunks' => $this->importLog->total_chunks + 1,
             ]);
         }
