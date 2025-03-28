@@ -2,16 +2,19 @@
 
 namespace App\Jobs;
 
+use App\Exceptions\ImportException;
 use App\Models\ImportLog;
-use App\Repositories\Contracts\ConfirmationRepositoryInterface;
-use App\Repositories\Contracts\ImportLogRepositoryInterface;
-use App\Services\Import\Contracts\ConfirmationMapperInterface;
+use App\Notifications\ImportNotification;
+use App\Repositories\ConfirmationRepository;
+use App\Repositories\ImportLogRepository;
+use App\Services\Import\ConfirmationMapperService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Notification;
 use Ramsey\Uuid\UuidInterface;
 use Throwable;
 
@@ -48,11 +51,8 @@ class ConfImport implements ShouldQueue
     private ?ImportLog $importLog;
 
     private int $inserted = 0;
-    private int $updated = 0;
 
-    private ImportLogRepositoryInterface $importLogRepository;
-    private ConfirmationRepositoryInterface $confirmationRepository;
-    private ConfirmationMapperInterface $confirmationMapper;
+    private int $updated = 0;
 
     /**
      * Create a new job instance.
@@ -62,19 +62,14 @@ class ConfImport implements ShouldQueue
         private readonly Collection $chunk,
     )
     {
-        //
+        $this->importLog = app(ImportLogRepository::class)->findOneBy(['uid' => $uid]);
     }
 
     /**
      * Execute the job.
      */
-    public function handle(
-        ImportLogRepositoryInterface $importLogRepository,
-        ConfirmationRepositoryInterface $confirmationRepository,
-        ConfirmationMapperInterface $confirmationMapper,
-    ): void
+    public function handle(): void
     {
-        $this->makeDependenciesVisible($importLogRepository, $confirmationRepository, $confirmationMapper);
         $this->startImport();
 
         foreach ($this->chunk as $productData) {
@@ -84,32 +79,26 @@ class ConfImport implements ShouldQueue
         $this->endImport();
     }
 
-    private function makeDependenciesVisible(
-        ImportLogRepositoryInterface $importLogRepository,
-        ConfirmationRepositoryInterface $confirmationRepository,
-        ConfirmationMapperInterface $confirmationMapper
-    ): void
-    {
-        $this->importLogRepository = $importLogRepository;
-        $this->confirmationRepository = $confirmationRepository;
-        $this->confirmationMapper = $confirmationMapper;
-    }
-
+    /**
+     * @throws ImportException
+     */
     private function startImport(): void
     {
-        //TODO if no log throw exception
-        $this->importLog = $this->importLogRepository->findOneBy(['uid' => $this->uid]);
-        $this->importLogRepository->update($this->importLog, [
+        if (!$this->importLog) {
+            $this->fail('Import log not find');
+
+            throw new ImportException('Import log not found');
+        }
+
+        app(ImportLogRepository::class)->update($this->importLog, [
             'total_chunks' => $this->importLog->total_chunks - 1,
         ]);
     }
 
-    private function processData(
-        array $productData,
-    ): void
+    private function processData(array $productData): void
     {
-        $mappedData = $this->confirmationMapper->mapToModel($productData);
-        $confInfo = $this->confirmationRepository->updateOrCreate($mappedData);
+        $mappedData = app(ConfirmationMapperService::class)->mapToModel($productData);
+        $confInfo = app(ConfirmationRepository::class)->updateOrCreate($mappedData);
 
         if ($confInfo->wasChanged(['updated_at'])) {
             $this->updated++;
@@ -122,7 +111,7 @@ class ConfImport implements ShouldQueue
 
     private function endImport(): void
     {
-        $this->importLogRepository->update($this->importLog, [
+        app(ImportLogRepository::class)->update($this->importLog, [
             'inserted' => $this->importLog->inserted + $this->inserted,
             'updated' => $this->importLog->updated + $this->updated,
         ]);
@@ -130,7 +119,8 @@ class ConfImport implements ShouldQueue
         $this->importLog = $this->importLog->fresh();
 
         if ($this->importLog->total_chunks === 0) {
-            //TODO send success notification / create log
+            Notification::route('mail', env('ADMIN_EMAIL'))
+                ->notify(new ImportNotification('Conf import successfully done!'));
         }
     }
 
@@ -139,10 +129,13 @@ class ConfImport implements ShouldQueue
      */
     public function failed(?Throwable $exception): void
     {
-        $this->importLogRepository->update($this->importLog, [
-            'total_chunks' => $this->importLog->total_chunks + 1,
-        ]);
+        if ($this->importLog) {
+            app(ImportLogRepository::class)->update($this->importLog, [
+                'total_chunks' => $this->importLog->total_chunks + 1,
+            ]);
+        }
 
-        //TODO send failed notification / create log
+        Notification::route('mail', env('ADMIN_EMAIL'))
+            ->notify(new ImportNotification('Conf import job failed: ' . $exception));
     }
 }
