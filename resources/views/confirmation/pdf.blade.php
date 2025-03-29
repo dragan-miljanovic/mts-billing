@@ -21,6 +21,11 @@
         th {
             background-color: #f2f2f2;
         }
+
+        .text-capitalize {
+            text-transform: capitalize;
+            width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -31,7 +36,7 @@
     @foreach ($confirmation->header->getAttributes() as $key => $value)
         @if (!in_array($key, ['id', 'headerable_type', 'headerable_id', 'created_at', 'updated_at']))
             <tr>
-                <th class="text-capitalize" style="width: 300px">{{ str_replace('_', ' ', $key) }}</th>
+                <th class="text-capitalize">{{ str_replace('_', ' ', $key) }}</th>
                 <td>
                     @if (in_array($key, ['ticket_timestamp', 'session_creation_timestamp']) && !is_null($value))
                         {{ \Carbon\Carbon::parse($value)->format('Y-m-d H:i:s') }}
@@ -54,7 +59,7 @@
     <tbody>
     @foreach ($confirmation->getAttributes() as $key => $value)
         <tr>
-            <th class="text-capitalize" style="width: 300px">{{ str_replace('_', ' ', $key) }}</th>
+            <th class="text-capitalize">{{ str_replace('_', ' ', $key) }}</th>
             <td>
                 @if (is_numeric($value) && in_array($key, ['transaction_fee', 'old_value', 'new_value', 'add_amount', 'set_balance', 'closing_balance']))
                     {{ number_format($value, 2) }} {{ $confirmation->currency }}
