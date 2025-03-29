@@ -4,7 +4,7 @@
     <div class="container mt-5">
         <!-- Page Heading -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="text-primary"><i class="bi bi-file-earmark-check"></i> Confirmation Details</h3>
+            <h3 class="text-primary"><i class="fa fa-file"></i> Confirmation Details</h3>
             <div>
                 <a href="{{ route('confirmations.index') }}" class="btn btn-outline-secondary">
                     <i class="fa fa-arrow-left"></i> Back to List
