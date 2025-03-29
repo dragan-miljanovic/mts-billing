@@ -6,10 +6,17 @@ use App\Http\Requests\ImportRequest;
 use App\Services\Import\ImportService;
 use App\Exceptions\ImportException;
 use App\Utils\Contracts\LoggerInterface;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 
 class ImportController extends Controller
 {
+    public function index(): View|Application|Factory
+    {
+        return view('import.index');
+    }
 
     public function import(
         LoggerInterface $logger,
