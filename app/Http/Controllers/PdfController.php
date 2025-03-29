@@ -2,27 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Contracts\CallChargeRepositoryInterface;
-use App\Repositories\Contracts\ConfirmationRepositoryInterface;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Requests\Pdf\GeneratePdfRequest;
+use App\Services\Pdf\Contracts\GeneratePdfServiceInterface;
+use App\Utils\Contracts\LoggerInterface;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use RuntimeException;
 
 class PdfController extends Controller
 {
     public function __construct(
-        private CallChargeRepositoryInterface $callChargeRepository,
-        private ConfirmationRepositoryInterface $confirmationRepository,
+        private GeneratePdfServiceInterface $createPdfServiceInterface,
+        private LoggerInterface $logger,
     ) {
         //
     }
 
-    public function generate(): Response
+    public function generate(GeneratePdfRequest $request): RedirectResponse|Response
     {
-        $confirmations = $this->confirmationRepository->findAll();
-        $callCharges = $this->callChargeRepository->findAll();
+        $type = $request->get('type');
+        $id = $request->get('id');
 
-        return Pdf::loadView('pdf.index', compact('confirmations', 'callCharges'))
-            ->setPaper('A0', 'landscape')
-            ->download('invoice.pdf');
+
+        try {
+            return $this->createPdfServiceInterface->generatePdf($type, $id);
+        } catch (RuntimeException $e) {
+            $this->logger ->error('Error while generate pdf: ', ['message' => $e]);
+
+            request()->session()->flash('message', 'Unexpected error, please try again later.');
+        }
+
+        return redirect()->back();
     }
 }

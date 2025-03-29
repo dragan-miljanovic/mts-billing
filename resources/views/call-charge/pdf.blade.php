@@ -8,16 +8,19 @@
         body {
             font-family: Arial, sans-serif;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         th, td {
             border: 1px solid #000;
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
@@ -30,7 +33,7 @@
     <tbody>
     @foreach ($callCharge->getAttributes() as $key => $value)
         <tr>
-            <th class="text-capitalize">{{ str_replace('_', ' ', $key) }}</th>
+            <th class="text-capitalize" style="width: 300px">{{ str_replace('_', ' ', $key) }}</th>
             <td>
                 @if (is_numeric($value) && in_array($key, ['call_duration', 'ticket_call_duration', 'charged_duration', 'ticket_charged_duration']))
                     {{ gmdate("H:i:s", $value) }} (hh:mm:ss)
@@ -38,6 +41,8 @@
                     {{ number_format($value, 2) }} {{ $callCharge->currency }}
                 @elseif (is_bool($value) || in_array($key, ['roaming', 'charge_free_action']))
                     {{ $value ? 'Yes' : 'No' }}
+                @elseif (is_string($value) || $key === 'additional_rating_info')
+                    {{ wordwrap($value, 50, "\n", true) }}
                 @else
                     {{ $value }}
                 @endif

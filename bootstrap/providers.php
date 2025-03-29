@@ -6,4 +6,5 @@ return [
     App\Providers\ConfirmationSeviceProvider::class,
     App\Providers\ImportServiceProvider::class,
     App\Providers\JobServiceProvider::class,
+    App\Providers\PdfSeviceProvider::class,
 ];

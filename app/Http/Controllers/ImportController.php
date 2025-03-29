@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ImportRequest;
-use App\Services\Import\ImportService;
 use App\Exceptions\ImportException;
+use App\Http\Requests\Import\ImportRequest;
+use App\Services\Import\ImportService;
 use App\Utils\Contracts\LoggerInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;

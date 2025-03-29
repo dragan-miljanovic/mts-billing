@@ -38,7 +38,8 @@
                                 <td>{{ $callCharge->account_id }}</td>
                                 <td>{{ $callCharge->account_type }}</td>
                                 <td>
-                                    <form action="{{ route('call-charges.destroy', $callCharge->id) }}" method="post" style="display: inline-block">
+                                    <form action="{{ route('call-charges.destroy', $callCharge->id) }}"
+                                        method="post" style="display: inline-block">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                         <button title="delete" type="submit" class="btn btn-outline-danger btn-lg">
@@ -49,7 +50,8 @@
                                        class="btn btn-outline-info btn-lg">
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                     </a>
-                                    <a href="" title="pdf" class="btn btn-outline-warning btn-lg">
+                                    <a href="{{ route('generate.pdf', ['type' => \App\Services\Pdf\Enums\PdfTypeEnum::Cdr->value, 'id' => $callCharge->id]) }}"
+                                       title="pdf" class="btn btn-outline-warning btn-lg">
                                         <i class="fa fa-file-pdf" aria-hidden="true"></i>
                                     </a>
                                 </td>

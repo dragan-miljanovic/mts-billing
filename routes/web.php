@@ -15,7 +15,7 @@ Route::get('/index', [ImportController::class, 'index'])->name('import.index');
 Route::post('/import', [ImportController::class, 'import'])->name('import');
 
 //PDF
-Route::get('/pdf', [PdfController::class, 'generate'])->name('generate.pdf');
+Route::get('/pdf/{type}/{id}', [PdfController::class, 'generate'])->name('generate.pdf');
 
 //Resources
 Route::resource('call-charges', CallChargeController::class)->only(['index', 'show', 'destroy']);
