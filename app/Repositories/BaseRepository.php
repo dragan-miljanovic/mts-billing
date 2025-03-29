@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Repositories\Contracts\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
@@ -33,6 +34,11 @@ abstract class BaseRepository implements BaseRepositoryInterface
     public function findAll(): Collection
     {
         return $this->model->all();
+    }
+
+    public function findAllWithPagination(int $id): LengthAwarePaginator
+    {
+        return $this->model->paginate($id);
     }
 
     public function insert(array $attributes): bool

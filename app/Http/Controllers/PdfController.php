@@ -21,7 +21,7 @@ class PdfController extends Controller
         $confirmations = $this->confirmationRepository->findAll();
         $callCharges = $this->callChargeRepository->findAll();
 
-        return Pdf::loadView('pdf', compact('confirmations', 'callCharges'))
+        return Pdf::loadView('pdf.index', compact('confirmations', 'callCharges'))
             ->setPaper('A0', 'landscape')
             ->download('invoice.pdf');
     }

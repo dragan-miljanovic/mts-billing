@@ -13,7 +13,7 @@
                     @csrf
                     <div class="mb-3">
                         <label for="file" class="form-label">Select a file to upload</label>
-                        <input type="file" class="form-control" id="file" name="file">
+                        <input type="file" class="form-control" name="file">
                         @error('file')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror

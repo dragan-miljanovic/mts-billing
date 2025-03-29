@@ -20,7 +20,7 @@
     @include('_partials.header')
 
     @if(Session::has('message'))
-        <div id="message" style="position: relative;" class="alert alert-info mt-5">
+        <div number="message" style="position: relative;" class="alert alert-info mt-5">
             <a class="close" data-dismiss="alert"></a>
             {{ Session::get('message') }}
         </div>
