@@ -35,12 +35,12 @@ class ConfImportStrategy implements ImportStrategyInterface
             $confData->chunk($chunkSize)->each(function ($collection) use ($uid) {
                 ConfImport::dispatch($uid, $collection);
 
-                $this->logger->info('Importing CONF record', ['record' => $collection->first()]);
+                $this->logger->info('Importing CONF record', ['records' => $collection]);
             });
 
             return;
         }
 
-        throw new ImportException('No data found');
+        $this->logger->info('No data found for confirmation import.');
     }
 }

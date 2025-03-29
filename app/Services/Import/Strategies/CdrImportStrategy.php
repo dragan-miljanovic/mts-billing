@@ -2,6 +2,7 @@
 
 namespace App\Services\Import\Strategies;
 
+use App\Exceptions\ImportException;
 use App\Jobs\CallChargeImport;
 use App\Repositories\ImportLogRepository;
 use App\Services\Import\Contracts\ImportStrategyInterface;
@@ -32,11 +33,15 @@ class CdrImportStrategy implements ImportStrategyInterface
         if (!$cdrData->isEmpty()) {
             $uid = $this->createImportLog($cdrData->count(), $chunkSize);
 
-            $cdrData->chunk($chunkSize)->each(function ($chunk) use ($uid) {
-                CallChargeImport::dispatch($uid, $chunk);
+            $cdrData->chunk($chunkSize)->each(function ($collection) use ($uid) {
+                CallChargeImport::dispatch($uid, $collection);
 
-                $this->logger->info('Importing CDR record', ['record' => $chunk]);
+                $this->logger->info('Importing CDR record', ['records' => $collection]);
             });
+
+            return;
         }
+
+        $this->logger->info('No data found for call charge import.');
     }
 }
