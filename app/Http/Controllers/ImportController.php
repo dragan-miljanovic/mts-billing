@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Import\ImportRequest;
+use App\Services\Import\Contracts\ImportServiceInterface;
 use App\Services\Import\ImportService;
 use App\Utils\Contracts\LoggerInterface;
 use Exception;
@@ -20,7 +21,7 @@ class ImportController extends Controller
 
     public function import(
         LoggerInterface $logger,
-        ImportService $importService,
+        ImportServiceInterface $importService,
         ImportRequest $request
     ): RedirectResponse
     {

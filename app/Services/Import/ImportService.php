@@ -4,10 +4,11 @@ namespace App\Services\Import;
 
 use App\Services\Import\Contracts\FileReaderInterface;
 use App\Services\Import\Contracts\ImportFactoryInterface;
+use App\Services\Import\Contracts\ImportServiceInterface;
 use App\Services\Import\Enums\ImportTypeEnum;
 use InvalidArgumentException;
 
-class ImportService
+class ImportService implements ImportServiceInterface
 {
     public function __construct(
         private FileReaderInterface $fileReader,
