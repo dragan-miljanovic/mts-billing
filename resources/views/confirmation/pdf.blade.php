@@ -62,6 +62,8 @@
                     {{ \Carbon\Carbon::parse($value)->format('Y-m-d') }}
                 @elseif (is_bool($value) || in_array($key, ['active_feature', 'fnf_action']))
                     {{ $value ? 'Yes' : 'No' }}
+                @elseif (is_null($value))
+                    -
                 @else
                     {{ $value }}
                 @endif

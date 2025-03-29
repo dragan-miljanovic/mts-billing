@@ -66,6 +66,8 @@
                     {{ $value ? 'Yes' : 'No' }}
                 @elseif (is_string($value) || $key === 'additional_rating_info')
                     {{ wordwrap($value, 50, "\n", true) }}
+                @elseif (is_null($value))
+                    -
                 @else
                     {{ $value }}
                 @endif

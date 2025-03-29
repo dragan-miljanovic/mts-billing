@@ -73,6 +73,8 @@
                                         {{ Carbon::parse($value)->format('Y-m-d') }}
                                     @elseif (is_bool($value) || in_array($key, ['active_feature', 'fnf_action']))
                                         <span class="badge {{ $value ? 'bg-danger' : 'bg-secondary' }}">{{ $value ? 'Yes' : 'No' }}</span>
+                                    @elseif (is_null($value))
+                                        -
                                     @else
                                         {{ $value }}
                                     @endif

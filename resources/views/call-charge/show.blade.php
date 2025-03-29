@@ -75,6 +75,8 @@
                                         <span class="badge {{ $value ? 'bg-danger' : 'bg-secondary' }}">
                                             {{ $value ? 'Yes' : 'No' }}
                                         </span>
+                                    @elseif (is_null($value))
+                                        -
                                     @else
                                         {{ $value }}
                                     @endif
