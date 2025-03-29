@@ -2,7 +2,6 @@
 
 namespace App\Services\Import\Strategies;
 
-use App\Exceptions\ImportException;
 use App\Jobs\ConfImport;
 use App\Repositories\Contracts\ImportLogRepositoryInterface;
 use App\Services\Import\Contracts\ImportStrategyInterface;
