@@ -23,7 +23,6 @@ class PdfController extends Controller
         $type = $request->get('type');
         $id = $request->get('id');
 
-
         try {
             return $this->createPdfServiceInterface->generatePdf($type, $id);
         } catch (RuntimeException $e) {

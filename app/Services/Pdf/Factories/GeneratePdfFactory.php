@@ -3,6 +3,7 @@
 namespace App\Services\Pdf\Factories;
 
 use App\Repositories\Contracts\CallChargeRepositoryInterface;
+use App\Repositories\Contracts\ConfirmationRepositoryInterface;
 use App\Services\Pdf\Contracts\GeneratePdfFactoryInterface;
 use App\Services\Pdf\Enums\PdfTypeEnum;
 use App\Services\Pdf\Strategies\CallChargeGenerateStrategy;
@@ -12,7 +13,8 @@ use InvalidArgumentException;
 class GeneratePdfFactory implements GeneratePdfFactoryInterface
 {
     public function __construct(
-        private CallChargeRepositoryInterface $callChargeRepository
+        private CallChargeRepositoryInterface $callChargeRepository,
+        private ConfirmationRepositoryInterface $confirmationRepository,
     ) {
         //
     }
@@ -27,7 +29,7 @@ class GeneratePdfFactory implements GeneratePdfFactoryInterface
     {
         return match ($type) {
             PdfTypeEnum::Cdr->value => new CallChargeGenerateStrategy($this->callChargeRepository),
-            PdfTypeEnum::Conf->value => new ConfirmationGenerateStrategy(),
+            PdfTypeEnum::Conf->value => new ConfirmationGenerateStrategy($this->confirmationRepository),
             default => throw new InvalidArgumentException("Invalid import type: $type")
         };
     }

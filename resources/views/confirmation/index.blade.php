@@ -1,3 +1,4 @@
+@php use App\Services\Pdf\Enums\PdfTypeEnum; @endphp
 @extends('layouts.master')
 
 @section('content')
@@ -52,7 +53,8 @@
                                        class="btn btn-outline-info btn-lg">
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                     </a>
-                                    <a href="" title="pdf" class="btn btn-outline-warning btn-lg">
+                                    <a href="{{ route('generate.pdf', ['type' => PdfTypeEnum::Conf->value, 'id' => $confirmation->id]) }}"
+                                       title="pdf" class="btn btn-outline-warning btn-lg">
                                         <i class="fa fa-file-pdf" aria-hidden="true"></i>
                                     </a>
                                 </td>
