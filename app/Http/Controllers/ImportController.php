@@ -30,9 +30,11 @@ class ImportController extends Controller
             $importService->import($file);
         } catch (Exception $e) {
 
-            $logger ->error('Error while getting authors: ', ['message' => $e]);
+            $logger ->error('Error while importing ', ['message' => $e]);
 
             request()->session()->flash('message', 'Unexpected error, please try again later. Import Has not started.');
+
+            return redirect()->back();
         }
 
         request()->session()->flash('message', 'Import successfully started.');
