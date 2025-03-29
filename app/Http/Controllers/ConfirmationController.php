@@ -6,6 +6,7 @@ use App\Http\Requests\Confirmation\DeleteConfirmationRequest;
 use App\Http\Requests\Confirmation\ShowConfirmationRequest;
 use App\Services\Confirmation\Contracts\ConfirmationCrudServiceInterface;
 use App\Utils\Contracts\LoggerInterface;
+use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -27,7 +28,7 @@ class ConfirmationController extends Controller
     {
         try {
             $confirmations = $this->confirmationCrudService->findAllWithPagination(5);
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             $this->logger ->error('Error while getting confirmations: ', ['message' => $e]);
 
             request()->session()->flash('message', 'Unexpected error, please try again later.');
@@ -45,7 +46,7 @@ class ConfirmationController extends Controller
 
         try {
             $confirmation = $this->confirmationCrudService->find($id);
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             $this->logger ->error('Error while getting single confirmation: ', ['message' => $e]);
 
             request()->session()->flash('message', 'Unexpected error, please try again later.');
@@ -63,7 +64,7 @@ class ConfirmationController extends Controller
 
         try {
             $this->confirmationCrudService->delete($id);
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             $this->logger ->error('Error while deleting confirmation: ', ['message' => $e]);
 
             request()->session()->flash('message', 'Unexpected error, please try again later.');

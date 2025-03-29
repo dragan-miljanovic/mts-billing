@@ -6,11 +6,11 @@ use App\Http\Requests\CallCharge\DeleteCallChargeRequest;
 use App\Http\Requests\CallCharge\ShowCallChargeRequest;
 use App\Services\CallCharge\Contracts\CallChargeCrudServiceInterface;
 use App\Utils\Contracts\LoggerInterface;
+use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
-use RuntimeException;
 
 class CallChargeController extends Controller
 {
@@ -28,7 +28,7 @@ class CallChargeController extends Controller
     {
         try {
             $callCharges = $this->callChargeCrudService->findAllWithPagination(5);
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             $this->logger ->error('Error while getting call charges: ', ['message' => $e]);
 
             request()->session()->flash('message', 'Unexpected error, please try again later.');
@@ -46,7 +46,7 @@ class CallChargeController extends Controller
 
         try {
             $callCharge = $this->callChargeCrudService->find($id);
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             $this->logger ->error('Error while getting single call charge: ', ['message' => $e]);
 
             request()->session()->flash('message', 'Unexpected error, please try again later.');
@@ -64,7 +64,7 @@ class CallChargeController extends Controller
 
         try {
             $this->callChargeCrudService->delete($id);
-        } catch (RuntimeException $e) {
+        } catch (Exception $e) {
             $this->logger ->error('Error while deleting call charges: ', ['message' => $e]);
 
             request()->session()->flash('message', 'Unexpected error, please try again later.');

@@ -34,7 +34,7 @@ class CallChargeCrudService implements CallChargeCrudServiceInterface
         $callCharge = $this->callChargeRepository->find($id);
 
         if (!$callCharge) {
-            throw new ModelNotFoundException('CallCharge not found for number ' . $id);
+            throw new ModelNotFoundException('CallCharge not found for id ' . $id);
         }
 
         $this->callChargeRepository->delete($callCharge);
