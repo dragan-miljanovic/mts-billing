@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Import;
+namespace App\Services\Import\Factories;
 
 use App\Repositories\ImportLogRepository;
 use App\Services\Import\Contracts\ImportFactoryInterface;

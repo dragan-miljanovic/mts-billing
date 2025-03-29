@@ -7,7 +7,7 @@ use App\Repositories\ImportLogRepository;
 use App\Services\Import\Contracts\FileReaderInterface;
 use App\Services\Import\Contracts\ImportFactoryInterface;
 use App\Services\Import\Contracts\ImportServiceInterface;
-use App\Services\Import\ImportFactory;
+use App\Services\Import\Factories\ImportFactory;
 use App\Services\Import\ImportService;
 use App\Services\Import\Readers\TextFileReader;
 use App\Utils\Contracts\LoggerInterface;
