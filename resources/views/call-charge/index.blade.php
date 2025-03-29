@@ -4,13 +4,13 @@
     <div class="container mt-5">
         <!-- Page Heading -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="text-primary"><i class="bi bi-book"></i> Call Charges</h3>
+            <h3 class="text-primary"><i class="fa fa-book"></i> Call Charges</h3>
         </div>
 
         <!-- Table Card -->
         <div class="card shadow-lg">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-list-task"></i> Call Charges List</h5>
+                <h5 class="mb-0"><i class="fa fa-list"></i> Call Charges List</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">

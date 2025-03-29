@@ -18,7 +18,7 @@
         <!-- Card for Confirmation Details -->
         <div class="card shadow-lg">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Confirmation Information</h5>
+                <h5 class="mb-0"><i class="fa fa-info-circle"></i> Confirmation Information</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

@@ -4,13 +4,13 @@
     <div class="container mt-5">
         <!-- Page Heading -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="text-primary"><i class="bi bi-telephone-inbound"></i> Call Charge Details</h3>
+            <h3 class="text-primary"><i class="fa fa-phone"></i> Call Charge Details</h3>
             <div>
                 <a href="{{ route('call-charges.index') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left-circle"></i> Back to List
+                    <i class="fa fa-arrow-left"></i> Back to List
                 </a>
                 <a href="" class="btn btn-outline-success ms-2">
-                    <i class="bi bi-file-earmark-pdf"></i> Create PDF
+                    <i class="fa fa-file-pdf-o"></i> Create PDF
                 </a>
             </div>
         </div>
@@ -18,7 +18,7 @@
         <!-- Card for CallCharge Details -->
         <div class="card shadow-lg">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Charge Information</h5>
+                <h5 class="mb-0"><i class="fa fa-info-circle"></i> Charge Information</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

@@ -4,13 +4,13 @@
     <div class="container mt-5">
         <!-- Page Heading -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="text-primary"><i class="bi bi-book"></i> Confirmations</h3>
+            <h3 class="text-primary"><i class="fa fa-book"></i> Confirmations</h3>
         </div>
 
         <!-- Table Card -->
         <div class="card shadow-lg">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-list-task"></i> Confirmation List</h5>
+                <h5 class="mb-0"><i class="fa fa-list"></i> Confirmation List</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -45,7 +45,7 @@
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                         <button title="delete" type="submit" class="btn btn-outline-danger btn-lg">
-                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
                                         </button>
                                     </form>
                                     <a href="{{ route('confirmations.show', $confirmation->id) }}" title="show"
