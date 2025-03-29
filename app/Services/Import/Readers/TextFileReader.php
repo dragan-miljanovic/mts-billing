@@ -52,7 +52,8 @@ class TextFileReader implements FileReaderInterface
             } elseif (str_contains($line, '#CRCE CONF')) {
                 $currentCategory = $confType;
             } elseif ($currentCategory && !empty(trim($line))) {
-                $parsedData[$currentCategory][] = array_slice(explode('|', $line), 23);
+                $parsedData[$currentCategory]['data'][] = array_slice(explode('|', $line), 23);
+                $parsedData[$currentCategory]['headers'][] = array_slice(explode('|', $line), 0, 23);
             }
         }
 

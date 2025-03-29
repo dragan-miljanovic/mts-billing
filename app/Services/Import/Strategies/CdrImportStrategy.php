@@ -26,7 +26,7 @@ class CdrImportStrategy implements ImportStrategyInterface
     public function process(array $data): void
     {
         $chunkSize = env('JOB_CHUNK_SIZE');
-        $cdrData = collect($data);
+        $cdrData = collect($data['data']);
 
         if (!$cdrData->isEmpty()) {
             $uid = $this->createImportLog($cdrData->count(), $chunkSize);

@@ -2,6 +2,7 @@
 
 namespace App\Services\Import\Strategies;
 
+use App\Exceptions\ImportException;
 use App\Jobs\ConfImport;
 use App\Repositories\Contracts\ImportLogRepositoryInterface;
 use App\Services\Import\Contracts\ImportStrategyInterface;
@@ -26,7 +27,7 @@ class ConfImportStrategy implements ImportStrategyInterface
     public function process(array $data): void
     {
         $chunkSize = env('JOB_CHUNK_SIZE');
-        $confData = collect($data);
+        $confData = collect($data['data']);
 
         if (!$confData->isEmpty()) {
             $uid = $this->createImportLog($confData->count(), $chunkSize);
@@ -36,6 +37,10 @@ class ConfImportStrategy implements ImportStrategyInterface
 
                 $this->logger->info('Importing CONF record', ['record' => $collection->first()]);
             });
+
+            return;
         }
+
+        throw new ImportException('No data found');
     }
 }
