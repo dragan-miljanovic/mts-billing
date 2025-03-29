@@ -13,7 +13,7 @@
         <!-- Heading -->
         <div class="row mt-4">
             <div class="col-12">
-                <h2 class="display-4 text-danger">Welcome to MTS Moblina Telefonija</h2>
+                <h2 class="display-4 text-danger">Welcome to MTS Mobilna Telefonija</h2>
                 <p class="lead text-secondary">Your trusted provider for mobile services and solutions.</p>
             </div>
         </div>

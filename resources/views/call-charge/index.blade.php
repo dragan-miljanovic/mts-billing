@@ -42,7 +42,7 @@
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
                                         <button title="delete" type="submit" class="btn btn-outline-danger btn-lg">
-                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
                                         </button>
                                     </form>
                                     <a href="{{ route('call-charges.show', $callCharge->id) }}" title="show"
@@ -50,7 +50,7 @@
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                     </a>
                                     <a href="" title="pdf" class="btn btn-outline-warning btn-lg">
-                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                        <i class="fa fa-file-pdf" aria-hidden="true"></i>
                                     </a>
                                 </td>
                             </tr>

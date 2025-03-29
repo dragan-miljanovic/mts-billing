@@ -10,7 +10,7 @@
                     <i class="fa fa-arrow-left"></i> Back to List
                 </a>
                 <a href="" class="btn btn-outline-warning ms-2">
-                    <i class="fa fa-file-pdf-o"></i> Create PDF
+                    <i class="fa fa-file-pdf"></i> Create PDF
                 </a>
             </div>
         </div>

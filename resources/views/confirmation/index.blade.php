@@ -53,7 +53,7 @@
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                     </a>
                                     <a href="" title="pdf" class="btn btn-outline-warning btn-lg">
-                                        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                        <i class="fa fa-file-pdf" aria-hidden="true"></i>
                                     </a>
                                 </td>
                             </tr>

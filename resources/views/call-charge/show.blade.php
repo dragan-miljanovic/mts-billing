@@ -9,8 +9,8 @@
                 <a href="{{ route('call-charges.index') }}" class="btn btn-outline-secondary">
                     <i class="fa fa-arrow-left"></i> Back to List
                 </a>
-                <a href="" class="btn btn-outline-success ms-2">
-                    <i class="fa fa-file-pdf-o"></i> Create PDF
+                <a href="" class="btn btn-outline-warning ms-2">
+                    <i class="fa fa-file-pdf"></i> Create PDF
                 </a>
             </div>
         </div>
