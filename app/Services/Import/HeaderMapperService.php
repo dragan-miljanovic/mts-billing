@@ -14,7 +14,6 @@ class HeaderMapperService implements HeaderMapperInterface
      *
      * @param array $rawData
      * @return array
-     * @throws HeaderMappingException
      */
     public function map(array $rawData): array
     {
