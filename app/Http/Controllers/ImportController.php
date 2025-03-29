@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Exceptions\ImportException;
 use App\Http\Requests\Import\ImportRequest;
 use App\Services\Import\ImportService;
 use App\Utils\Contracts\LoggerInterface;
+use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -28,7 +28,7 @@ class ImportController extends Controller
             $file = $request->file('file');
 
             $importService->import($file);
-        } catch (ImportException $e) {
+        } catch (Exception $e) {
 
             $logger ->error('Error while getting authors: ', ['message' => $e]);
 
