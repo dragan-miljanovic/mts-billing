@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\CallCharge;
+namespace App\Http\Requests\Confirmation;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteCallChargeRequest extends FormRequest
+class ShowConfirmationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,14 +22,14 @@ class DeleteCallChargeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'call_charge' => 'required|integer|exists:call_charges,id',
+            'confirmation' => 'required|integer|exists:confirmations,id',
         ];
     }
 
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'call_charge' => $this->route('call_charge')
+            'confirmation' => $this->route('confirmation')
         ]);
     }
 }

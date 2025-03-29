@@ -65,7 +65,7 @@ class CallChargeController extends Controller
         try {
             $this->callChargeCrudService->delete($id);
         } catch (RuntimeException $e) {
-            $this->logger ->error('Error while getting call charges: ', ['message' => $e]);
+            $this->logger ->error('Error while deleting call charges: ', ['message' => $e]);
 
             request()->session()->flash('message', 'Unexpected error, please try again later.');
         }
