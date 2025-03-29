@@ -1,3 +1,8 @@
+@php
+    use App\Services\Pdf\Enums\PdfTypeEnum;
+    use Carbon\Carbon;
+@endphp
+
 @extends('layouts.master')
 
 @section('content')
@@ -9,7 +14,8 @@
                 <a href="{{ route('confirmations.index') }}" class="btn btn-outline-secondary">
                     <i class="fa fa-arrow-left"></i> Back to List
                 </a>
-                <a href="" class="btn btn-outline-warning ms-2">
+                <a href="{{ route('generate.pdf', ['type' => PdfTypeEnum::Conf->value, 'id' => $confirmation->id]) }}"
+                   class="btn btn-outline-warning ms-2">
                     <i class="fa fa-file-pdf"></i> Create PDF
                 </a>
             </div>
@@ -29,9 +35,10 @@
                                 <th class="text-capitalize">{{ str_replace('_', ' ', $key) }}</th>
                                 <td>
                                     @if (is_numeric($value) && in_array($key, ['transaction_fee', 'old_value', 'new_value', 'add_amount', 'set_balance', 'closing_balance']))
-                                        <span class="badge bg-success">{{ number_format($value, 2) }} {{ $confirmation->currency }}</span>
+                                        <span
+                                            class="badge bg-success">{{ number_format($value, 2) }} {{ $confirmation->currency }}</span>
                                     @elseif (is_numeric($value) && in_array($key, ['billing_period_start_date', 'billing_period_end_date', 'subscriber_activation_date', 'subscriber_expiry_date']))
-                                        {{ \Carbon\Carbon::parse($value)->format('Y-m-d') }}
+                                        {{ Carbon::parse($value)->format('Y-m-d') }}
                                     @elseif (is_bool($value) || in_array($key, ['active_feature', 'fnf_action']))
                                         <span class="badge {{ $value ? 'bg-danger' : 'bg-secondary' }}">
                                             {{ $value ? 'Yes' : 'No' }}

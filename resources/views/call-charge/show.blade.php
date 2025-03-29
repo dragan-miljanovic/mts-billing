@@ -1,3 +1,7 @@
+@php
+    use App\Services\Pdf\Enums\PdfTypeEnum;
+@endphp
+
 @extends('layouts.master')
 
 @section('content')
@@ -9,7 +13,8 @@
                 <a href="{{ route('call-charges.index') }}" class="btn btn-outline-secondary">
                     <i class="fa fa-arrow-left"></i> Back to List
                 </a>
-                <a href="" class="btn btn-outline-warning ms-2">
+                <a href="{{ route('generate.pdf', ['type' => PdfTypeEnum::Cdr->value, 'id' => $callCharge->id]) }}"
+                   class="btn btn-outline-warning ms-2">
                     <i class="fa fa-file-pdf"></i> Create PDF
                 </a>
             </div>
@@ -31,7 +36,8 @@
                                     @if (is_numeric($value) && in_array($key, ['call_duration', 'ticket_call_duration', 'charged_duration', 'ticket_charged_duration']))
                                         {{ gmdate("H:i:s", $value) }} (hh:mm:ss)
                                     @elseif (is_numeric($value) && in_array($key, ['charge_amount', 'closing_balance', 'max_call_cost']))
-                                        <span class="badge bg-success">{{ number_format($value, 2) }} {{ $callCharge->currency }}</span>
+                                        <span
+                                            class="badge bg-success">{{ number_format($value, 2) }} {{ $callCharge->currency }}</span>
                                     @elseif (is_bool($value) || in_array($key, ['roaming', 'charge_free_action']))
                                         <span class="badge {{ $value ? 'bg-danger' : 'bg-secondary' }}">
                                             {{ $value ? 'Yes' : 'No' }}
