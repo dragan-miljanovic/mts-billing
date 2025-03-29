@@ -7,7 +7,6 @@ use App\Models\CallCharge;
 use App\Models\ImportLog;
 use App\Notifications\ImportNotification;
 use App\Repositories\Contracts\CallChargeRepositoryInterface;
-use App\Repositories\Contracts\HeaderRepositoryInterface;
 use App\Repositories\Contracts\ImportLogRepositoryInterface;
 use App\Services\Import\Contracts\CallChargeMapperInterface;
 use App\Services\Import\Contracts\HeaderMapperInterface;
@@ -101,7 +100,7 @@ class CallChargeImport implements ShouldQueue
 
     private function processData(array $productData): void
     {
-        $callChargedMappedData = app(CallChargeMapperInterface::class)->mapToModel($productData['data']);
+        $callChargedMappedData = app(CallChargeMapperInterface::class)->map($productData['data']);
         $headerMappedData = app(HeaderMapperInterface::class)->map($productData['headers']);
         $callCharge = app(CallChargeRepositoryInterface::class)->findOneBy($callChargedMappedData);
 

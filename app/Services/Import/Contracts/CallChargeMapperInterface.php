@@ -10,5 +10,5 @@ interface CallChargeMapperInterface
      * @param array $rawData
      * @return array
      */
-    public function mapToModel(array $rawData): array;
+    public function map(array $rawData): array;
 }

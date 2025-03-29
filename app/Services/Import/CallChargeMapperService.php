@@ -15,7 +15,7 @@ class CallChargeMapperService implements CallChargeMapperInterface
      * @return array
      * @throws CallChargeMappingException
      */
-    public function mapToModel(array $rawData): array
+    public function map(array $rawData): array
     {
         // Validate input data
         $this->validateInputData($rawData);
