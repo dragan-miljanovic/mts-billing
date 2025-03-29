@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class CallCharge extends Model
 {
@@ -63,4 +64,9 @@ class CallCharge extends Model
         'transparent_data',
         'additional_rating_info',
     ];
+
+    public function header(): MorphOne
+    {
+        return $this->morphOne(Header::class, 'headerable');
+    }
 }

@@ -3,18 +3,22 @@
 namespace App\Jobs;
 
 use App\Exceptions\ImportException;
+use App\Models\Confirmation;
 use App\Models\ImportLog;
 use App\Notifications\ImportNotification;
 use App\Repositories\Contracts\ConfirmationRepositoryInterface;
+use App\Repositories\Contracts\HeaderRepositoryInterface;
 use App\Repositories\Contracts\ImportLogRepositoryInterface;
 use App\Repositories\ImportLogRepository;
 use App\Services\Import\Contracts\ConfirmationMapperInterface;
+use App\Services\Import\Contracts\HeaderMapperInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Ramsey\Uuid\UuidInterface;
 use Throwable;
@@ -98,16 +102,30 @@ class ConfImport implements ShouldQueue
 
     private function processData(array $productData): void
     {
-        $mappedData = app(ConfirmationMapperInterface::class)->mapToModel($productData);
-        $confInfo = app(ConfirmationRepositoryInterface::class)->updateOrCreate($mappedData);
+        $confMappedData = app(ConfirmationMapperInterface::class)->mapToModel($productData['data']);
+        $headerMappedData = app(HeaderMapperInterface::class)->map($productData['headers']);
+        $confirmation = app(ConfirmationRepositoryInterface::class)->findOneBy($confMappedData);
 
-        if ($confInfo->wasChanged(['updated_at'])) {
-            $this->updated++;
+        DB::beginTransaction();
 
-            return;
+        try {
+            if (!$confirmation) {
+                /** @var Confirmation $callCharge */
+                $confirmation = app(ConfirmationRepositoryInterface::class)->create($confMappedData);
+            }
+
+            // Ensure Confirmation has the Header associated
+            if (!$confirmation->header()->where($headerMappedData)->exists()) {
+                $headerModel = app(HeaderMapperInterface::class)->mapToModel($headerMappedData);
+                $confirmation->header()->save($headerModel); // Save header to establish relation
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            throw $exception;
         }
 
-        $this->inserted++;
+        DB::commit();
     }
 
     private function endImport(): void

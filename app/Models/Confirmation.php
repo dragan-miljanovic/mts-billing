@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Confirmation extends Model
 {
@@ -49,4 +50,9 @@ class Confirmation extends Model
         'crce_result_code',
         'transparent_data',
     ];
+
+    public function header(): MorphOne
+    {
+        return $this->morphOne(Header::class, 'headerable');
+    }
 }

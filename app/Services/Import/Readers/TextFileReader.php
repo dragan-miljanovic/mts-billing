@@ -46,14 +46,14 @@ class TextFileReader implements FileReaderInterface
         ];
         $currentCategory = null;
 
-        foreach ($records as $line) {
+        foreach ($records as $index => $line) {
             if (str_contains($line, '#CRCE CDR')) {
                 $currentCategory = $cdrType;
             } elseif (str_contains($line, '#CRCE CONF')) {
                 $currentCategory = $confType;
             } elseif ($currentCategory && !empty(trim($line))) {
-                $parsedData[$currentCategory]['data'][] = array_slice(explode('|', $line), 23);
-                $parsedData[$currentCategory]['headers'][] = array_slice(explode('|', $line), 0, 23);
+                $parsedData[$currentCategory][$index]['data'] = array_slice(explode('|', $line), 23);
+                $parsedData[$currentCategory][$index]['headers'] = array_slice(explode('|', $line), 0, 23);
             }
         }
 

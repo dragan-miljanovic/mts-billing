@@ -3,17 +3,21 @@
 namespace App\Jobs;
 
 use App\Exceptions\ImportException;
+use App\Models\CallCharge;
 use App\Models\ImportLog;
 use App\Notifications\ImportNotification;
 use App\Repositories\Contracts\CallChargeRepositoryInterface;
+use App\Repositories\Contracts\HeaderRepositoryInterface;
 use App\Repositories\Contracts\ImportLogRepositoryInterface;
 use App\Services\Import\Contracts\CallChargeMapperInterface;
+use App\Services\Import\Contracts\HeaderMapperInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Ramsey\Uuid\UuidInterface;
 use Throwable;
@@ -97,16 +101,30 @@ class CallChargeImport implements ShouldQueue
 
     private function processData(array $productData): void
     {
-        $mappedData = app(CallChargeMapperInterface::class)->mapToModel($productData);
-        $confInfo = app(CallChargeRepositoryInterface::class)->updateOrCreate($mappedData);
+        $callChargedMappedData = app(CallChargeMapperInterface::class)->mapToModel($productData['data']);
+        $headerMappedData = app(HeaderMapperInterface::class)->map($productData['headers']);
+        $callCharge = app(CallChargeRepositoryInterface::class)->findOneBy($callChargedMappedData);
 
-        if ($confInfo->wasChanged(['updated_at'])) {
-            $this->updated++;
+        DB::beginTransaction();
 
-            return;
+        try {
+            if (!$callCharge) {
+                /** @var CallCharge $callCharge */
+                $callCharge = app(CallChargeRepositoryInterface::class)->create($callChargedMappedData);
+            }
+
+            // Ensure CallCharge has the Header associated
+            if (!$callCharge->header()->where($headerMappedData)->exists()) {
+                $headerModel = app(HeaderMapperInterface::class)->mapToModel($headerMappedData);
+                $callCharge->header()->save($headerModel); // Save header to establish relation
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            throw $exception;
         }
 
-        $this->inserted++;
+        DB::commit();
     }
 
     private function endImport(): void

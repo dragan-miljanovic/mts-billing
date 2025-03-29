@@ -27,7 +27,7 @@ class ConfImportStrategy implements ImportStrategyInterface
     public function process(array $data): void
     {
         $chunkSize = env('JOB_CHUNK_SIZE');
-        $confData = collect($data['data']);
+        $confData = collect($data);
 
         if (!$confData->isEmpty()) {
             $uid = $this->createImportLog($confData->count(), $chunkSize);
