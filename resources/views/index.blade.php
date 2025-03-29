@@ -1,41 +1,39 @@
 @extends('layouts.master')
 
 @section('content')
-
-    <div class="container mt-5">
-        <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white text-center">
-                <h3 class="mb-0">File Management</h3>
+    <div class="container text-center mt-5">
+        <!-- MTS Mobilna Telefonija Logo Section -->
+        <div class="row">
+            <div class="col-12">
+                <img src="https://upload.wikimedia.org/wikipedia/sr/thumb/f/f0/%D0%9C%D0%A2%D0%A1_%28%D0%BB%D0%BE%D0%B3%D0%BE_2015%29.svg/800px-%D0%9C%D0%A2%D0%A1_%28%D0%BB%D0%BE%D0%B3%D0%BE_2015%29.svg.png?20241121010338"
+                     alt="MTS Mobilna Telefonija Logo" class="img-fluid" style="max-width: 300px;">
             </div>
-            <div class="card-body">
-                <!-- File upload form -->
-                <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data" class="mb-4">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="file" class="form-label">Select a file to upload</label>
-                        <input type="file" class="form-control" name="file">
-                        @error('file')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                        <button type="submit" class="btn btn-primary me-md-2">
-                            <i class="bi bi-upload me-2"></i>Upload File
-                        </button>
-                    </div>
-                </form>
+        </div>
 
-                <!-- PDF Creation Section -->
-                <div class="border-top pt-4">
-                    <h5 class="mb-3">Generate PDF</h5>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                        <a href="{{ route('generate.pdf') }}" class="btn btn-outline-success me-md-2">
-                            <i class="bi bi-file-earmark-pdf me-2"></i>Create PDF
-                        </a>
-                    </div>
-                </div>
+        <!-- Heading -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h2 class="display-4 text-danger">Welcome to MTS Moblina Telefonija</h2>
+                <p class="lead text-secondary">Your trusted provider for mobile services and solutions.</p>
+            </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <p class="text-muted">
+                    MTS Mobilna Telefonija is your one-stop solution for mobile services. We provide high-quality telecommunications and mobile solutions to keep you connected wherever you go.
+                </p>
+            </div>
+        </div>
+
+        <!-- Call to Action Button -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <a href="https://mts.rs" class="btn btn-danger btn-lg">
+                    <i class="fa fa-mobile-alt"></i> Explore Our Services
+                </a>
             </div>
         </div>
     </div>
-
 @stop
