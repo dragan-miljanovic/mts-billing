@@ -14,6 +14,6 @@
 
 * Klonirati repo
 * Iz konzole u root folderu vašeg projekta:
-    *  izvršite `sh checkall.sh` da biste stovali env, instalirali biblioteke za bekend i pokrenuli migracije.
+    *  izvršite `sh checkall.sh` da biste setovali env, instalirali biblioteke i pokrenuli migracije.
 
 Uživajte 😉
