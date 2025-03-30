@@ -13,7 +13,7 @@ class PdfSeviceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(GeneratePdfServiceInterface::class, GeneratePdfService::class);
+        $this->app->singleton(GeneratePdfServiceInterface::class, GeneratePdfService::class);
     }
 
     /**

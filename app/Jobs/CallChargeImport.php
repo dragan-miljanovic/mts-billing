@@ -117,6 +117,8 @@ class CallChargeImport implements ShouldQueue
                 $headerModel = app(HeaderMapperInterface::class)->mapToModel($headerMappedData);
                 $callCharge->header()->save($headerModel); // Save header to establish relation
             }
+
+            ++$this->inserted;
         } catch (\Exception $exception) {
             DB::rollBack();
 

@@ -13,7 +13,7 @@ class CallChargeServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(CallChargeCrudServiceInterface::class, CallChargeCrudService::class);
+        $this->app->singleton(CallChargeCrudServiceInterface::class, CallChargeCrudService::class);
     }
 
     /**

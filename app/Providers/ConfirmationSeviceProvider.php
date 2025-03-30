@@ -13,7 +13,7 @@ class ConfirmationSeviceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(ConfirmationCrudServiceInterface::class, ConfirmationCrudService::class);
+        $this->app->singleton(ConfirmationCrudServiceInterface::class, ConfirmationCrudService::class);
     }
 
     /**

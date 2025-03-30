@@ -22,12 +22,12 @@ class ImportServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(LoggerInterface::class, LogHelper::class);
-        $this->app->bind(FileReaderInterface::class, TextFileReader::class);
-        $this->app->bind(ImportLogRepositoryInterface::class, ImportLogRepository::class);
-        $this->app->bind(ImportServiceInterface::class, ImportService::class);
+        $this->app->singleton(LoggerInterface::class, LogHelper::class);
+        $this->app->singleton(FileReaderInterface::class, TextFileReader::class);
+        $this->app->singleton(ImportLogRepositoryInterface::class, ImportLogRepository::class);
+        $this->app->singleton(ImportServiceInterface::class, ImportService::class);
 
-        $this->app->bind(ImportFactoryInterface::class, function ($app) {
+        $this->app->singleton(ImportFactoryInterface::class, function ($app) {
             return new ImportFactory(
                 $app->make(LoggerInterface::class),
                 $app->make(ImportLogRepositoryInterface::class)

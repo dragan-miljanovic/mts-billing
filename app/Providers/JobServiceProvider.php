@@ -25,13 +25,13 @@ class JobServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(ConfirmationMapperInterface::class, ConfirmationMapperService::class);
-        $this->app->bind(CallChargeMapperInterface::class, CallChargeMapperService::class);
-        $this->app->bind(CallChargeRepositoryInterface::class, CallChargeRepository::class);
-        $this->app->bind(ConfirmationRepositoryInterface::class, ConfirmationRepository::class);
-        $this->app->bind(ImportLogRepositoryInterface::class, ImportLogRepository::class);
-        $this->app->bind(HeaderMapperInterface::class, HeaderMapperService::class);
-        $this->app->bind(HeaderRepositoryInterface::class, HeaderRepository::class);
+        $this->app->singleton(ConfirmationMapperInterface::class, ConfirmationMapperService::class);
+        $this->app->singleton(CallChargeMapperInterface::class, CallChargeMapperService::class);
+        $this->app->singleton(CallChargeRepositoryInterface::class, CallChargeRepository::class);
+        $this->app->singleton(ConfirmationRepositoryInterface::class, ConfirmationRepository::class);
+        $this->app->singleton(ImportLogRepositoryInterface::class, ImportLogRepository::class);
+        $this->app->singleton(HeaderMapperInterface::class, HeaderMapperService::class);
+        $this->app->singleton(HeaderRepositoryInterface::class, HeaderRepository::class);
     }
 
     /**
