@@ -32,3 +32,5 @@ echo "======Run migrations========="
 php artisan migrate:fresh
 echo "=================Artisan optimize:clear====================="
 php artisan optimize:clear
+echo "=================Artisan storage:link====================="
+php artisan storage:link
