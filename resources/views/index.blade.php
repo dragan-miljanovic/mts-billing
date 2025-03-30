@@ -5,7 +5,7 @@
         <!-- MTS SI Logo Section -->
         <div class="row">
             <div class="col-12">
-                <img src="{{ asset('storage/mts-si-tp.png') }}"
+                <img src="https://mts.rs/Picture/27561/jpeg/MTS-Tvoj-Svet-1920x1080.jpg"
                      alt="MTS SI Logo" class="img-fluid">
             </div>
         </div>
